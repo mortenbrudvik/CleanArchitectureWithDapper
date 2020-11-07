@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Infrastructure
 {
     public interface ITaskRepository
     {
-        void Create(TaskItem taskItem);
-        IEnumerable<TaskItem> GetAll();
+        Task<TaskItem> CreateAsync(TaskItem taskItem);
+        Task<IEnumerable<TaskItem>> GetAll();
     }
 }

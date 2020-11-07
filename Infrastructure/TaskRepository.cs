@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Data.Sqlite;
 
@@ -12,21 +13,20 @@ namespace Infrastructure
         {
             _connectionString = connectionString;
         }
-        public void Create(TaskItem taskItem)
+        public async Task<TaskItem> CreateAsync(TaskItem taskItem)
         {
-            using var connection = new SqliteConnection(_connectionString);
+            await using var connection = new SqliteConnection(_connectionString);
 
-            connection.Execute("INSERT INTO TaskItems (Name, IsCompleted)" +
-                                    "VALUES (@Name, @IsCompleted);", taskItem);
+            taskItem.Id = await connection.ExecuteScalarAsync<long>("INSERT INTO TaskItems (Name, IsCompleted)" +
+                                                                    "VALUES (@Name, @IsCompleted);SELECT last_insert_rowid();", taskItem);
+            return taskItem;
         }
 
-        public IEnumerable<TaskItem> GetAll() 
+        public async Task<IEnumerable<TaskItem>> GetAll() 
         {
-            using var connection = new SqliteConnection(_connectionString);
+            await using var connection = new SqliteConnection(_connectionString);
 
-            var items = connection.Query<TaskItem>("SELECT * FROM TaskItems");
-
-            return items;
+            return await connection.QueryAsync<TaskItem>("SELECT * FROM TaskItems");
         } 
     }
 }

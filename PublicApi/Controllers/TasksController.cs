@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +10,6 @@ namespace PublicApi.Controllers
     [Route("[controller]")]
     public class TasksController : ControllerBase
     {
-
         private readonly ILogger<TasksController> _logger;
         private readonly ITaskRepository _taskRepository;
 
@@ -23,9 +20,15 @@ namespace PublicApi.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<TaskItem> Get()
+        public async Task<IEnumerable<TaskItem>> Get()
         {
-            return _taskRepository.GetAll();
+            return await _taskRepository.GetAll();
+        }
+
+        [HttpPost]
+        public async Task<TaskItem> PostTask(TaskItem task)
+        {
+            return await _taskRepository.CreateAsync(task);
         }
     }
 }

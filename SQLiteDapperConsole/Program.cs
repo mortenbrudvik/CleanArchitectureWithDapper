@@ -33,6 +33,7 @@ namespace SQLiteDapperConsole
                 return;
 
             connection.Execute("Create Table TaskItems (" +
+                               "Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
                                "Name VARCHAR(200) NOT NULL," +
                                "IsCompleted INTEGER DEFAULT 0);");
 
