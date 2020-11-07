@@ -1,27 +1,26 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Dapper;
+using Infrastructure;
 using Microsoft.Data.Sqlite;
+using PublicApi;
 
 namespace SQLiteDapperConsole
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             var connectionString = "Data Source=Planner.sqlite";
             SetupDatabase(connectionString);
 
-            var task = new TaskItem()
-            {
-                Name = "Complete the code for this project",
-                IsCompleted = true
-            };
+            var apiService = new ApiService();
+            await apiService.StartAsync(args);
 
-            var taskRepository = new TaskRepository(connectionString);
+            Console.ReadKey();
 
-            taskRepository.Create(task);
-
+            await apiService.StopAsync();
         }
 
         public static void SetupDatabase(string connectionString)
@@ -29,14 +28,27 @@ namespace SQLiteDapperConsole
             using var connection = new SqliteConnection(connectionString);
 
             var table = connection.Query("SELECT name FROM sqlite_master WHERE type='table' AND name = 'TaskItems';");
-            var tableName = table.FirstOrDefault();
+            var tableName = table.FirstOrDefault()?.name;
             if (!string.IsNullOrEmpty(tableName) && tableName == "TaskItems")
                 return;
 
             connection.Execute("Create Table TaskItems (" +
                                "Name VARCHAR(200) NOT NULL," +
                                "IsCompleted INTEGER DEFAULT 0);");
-        }
 
+            // Seed some data
+            connection.Execute("INSERT INTO TaskItems (Name, IsCompleted)" +
+                               "VALUES (@Name, @IsCompleted);", new TaskItem()
+            {
+                Name = "Brush teeth"
+            });
+            connection.Execute("INSERT INTO TaskItems (Name, IsCompleted)" +
+                               "VALUES (@Name, @IsCompleted);", new TaskItem()
+            {
+                Name = "Do some shopping",
+                IsCompleted = true
+            });
+
+        }
     }
 }

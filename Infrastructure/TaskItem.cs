@@ -1,4 +1,4 @@
-﻿namespace SQLiteDapperConsole
+﻿namespace Infrastructure
 {
     public class TaskItem
     {
