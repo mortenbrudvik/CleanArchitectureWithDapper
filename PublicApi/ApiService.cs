@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace PublicApi
 {
@@ -16,7 +17,8 @@ namespace PublicApi
             _host = await Host.CreateDefaultBuilder(args).UseContentRoot(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
                 .ConfigureLogging(logging =>
                 {
-                    // Add logger
+                    logging.AddConsole();
+                    logging.AddDebug();
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using ApplicationCore.Entities;
 using Dapper;
-using Infrastructure;
 using Microsoft.Data.Sqlite;
 using PublicApi;
 

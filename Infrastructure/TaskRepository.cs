@@ -1,32 +1,37 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using ApplicationCore.Entities;
+using ApplicationCore.Interfaces;
 using Dapper;
 using Microsoft.Data.Sqlite;
 
 namespace Infrastructure
 {
-    public class TaskRepository : ITaskRepository
+    public class TaskRepository : ITaskRepository, IDisposable
     {
-        private readonly string _connectionString;
+        private readonly SqliteConnection _connection;
 
-        public TaskRepository(string connectionString)
+        public TaskRepository(SqliteConnection connection)
         {
-            _connectionString = connectionString;
+            _connection = connection;
         }
+
         public async Task<TaskItem> CreateAsync(TaskItem taskItem)
         {
-            await using var connection = new SqliteConnection(_connectionString);
-
-            taskItem.Id = await connection.ExecuteScalarAsync<long>("INSERT INTO TaskItems (Name, IsCompleted)" +
+            taskItem.Id = await _connection.ExecuteScalarAsync<long>("INSERT INTO TaskItems (Name, IsCompleted)" +
                                                                     "VALUES (@Name, @IsCompleted);SELECT last_insert_rowid();", taskItem);
             return taskItem;
         }
 
         public async Task<IEnumerable<TaskItem>> GetAll() 
         {
-            await using var connection = new SqliteConnection(_connectionString);
+            return await _connection.QueryAsync<TaskItem>("SELECT * FROM TaskItems");
+        }
 
-            return await connection.QueryAsync<TaskItem>("SELECT * FROM TaskItems");
-        } 
+        public void Dispose()
+        {
+            _connection?.Dispose();
+        }
     }
 }

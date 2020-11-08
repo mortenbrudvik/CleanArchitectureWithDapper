@@ -1,4 +1,4 @@
-﻿namespace Infrastructure
+﻿namespace ApplicationCore.Entities
 {
     public class TaskItem
     {

@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using ApplicationCore.Interfaces;
+using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure
@@ -9,7 +11,8 @@ namespace Infrastructure
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            services.AddTransient<ITaskRepository>(_ => new TaskRepository(connectionString));
+            services.AddScoped<ITaskRepository>(_ => new TaskRepository(new SqliteConnection(connectionString)));
+            services.AddScoped<IUnitOfWork>(_ => new UnitOfWork(new SqliteConnection(connectionString)));
 
             return services;
         }

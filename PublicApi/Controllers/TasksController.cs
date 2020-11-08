@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Infrastructure;
+using ApplicationCore.Entities;
+using ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -26,9 +27,13 @@ namespace PublicApi.Controllers
         }
 
         [HttpPost]
-        public async Task<TaskItem> PostTask(TaskItem task)
+        public async Task<TaskItem> PostTask([FromServices] IUnitOfWork unitOfWork, TaskItem task)
         {
-            return await _taskRepository.CreateAsync(task);
+            var insertedTask = await unitOfWork.TaskRepository.CreateAsync(task);
+
+            await unitOfWork.SaveAsync();
+
+            return insertedTask;
         }
     }
 }
