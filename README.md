@@ -6,3 +6,4 @@ Features
 * Create task, and fetch all tasks using the the api. ../tasks 
 * Support for swagger at root address.
 * UnitOfWork pattern implemented.
+* Support for NLog provider for improved logging
