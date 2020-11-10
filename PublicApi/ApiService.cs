@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
+using NLog.Web;
 
 namespace PublicApi
 {
@@ -14,18 +16,36 @@ namespace PublicApi
 
         public async Task StartAsync(string[] args)
         {
-            _host = await Host.CreateDefaultBuilder(args).UseContentRoot(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
-                .ConfigureLogging(logging =>
-                {
-                    logging.AddConsole();
-                    logging.AddDebug();
-                })
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                })
-                .StartAsync();
+            var logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+
+            try
+            {
+                logger.Debug("Start Public API Service");
+
+                _host = await Host.CreateDefaultBuilder(args).UseContentRoot(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
+                    .ConfigureLogging(logging =>
+                    {
+                        //logging.ClearProviders();
+                    })
+                    .ConfigureWebHostDefaults(webBuilder =>
+                    {
+                        webBuilder.UseStartup<Startup>();
+                    })
+                    .UseNLog()
+                    .StartAsync();
+
+            }
+            catch (Exception exception)
+            {
+                logger.Error(exception, "Failed to start API");
+                throw;
+            }
+            finally
+            {
+                NLog.LogManager.Shutdown();
+            }
         }
+
         public async Task StopAsync()
         {
             using (_host)
