@@ -39,6 +39,11 @@ namespace Infrastructure
                 await _transaction.RollbackAsync();
                 throw new Exception("Failed to commit changes to database", e);
             }
+            finally
+            {
+                await _transaction.DisposeAsync();
+                _transaction = (SqliteTransaction)await _connection.Value.BeginTransactionAsync();
+            }
         }
 
         public void Dispose()

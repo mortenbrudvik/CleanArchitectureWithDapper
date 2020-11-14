@@ -8,7 +8,7 @@ using Microsoft.Data.Sqlite;
 
 namespace Infrastructure
 {
-    public class TaskRepository : ITaskRepository
+    internal class TaskRepository : ITaskRepository
     {
         private readonly SqliteConnection _connection;
 
