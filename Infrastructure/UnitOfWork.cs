@@ -7,41 +7,29 @@ namespace Infrastructure
 {
     internal class UnitOfWork: IUnitOfWork
     {
-        private readonly string _connectionString;
-        private SqliteConnection _connection;
+        private readonly Lazy<SqliteConnection> _connection;
+        private readonly Lazy<ITaskRepository> _taskRepository;
         private SqliteTransaction _transaction;
-        private  ITaskRepository _taskRepository;
 
         public UnitOfWork(string connectionString)
         {
-            _connectionString = connectionString;
-        }
-
-        public SqliteConnection Connection
-        {
-            get
+            _connection = new Lazy<SqliteConnection>(() =>
             {
-                if (_connection != null) return _connection;
-                
-                _connection = new SqliteConnection(_connectionString);
-                _connection.Open();
-                _transaction = _connection.BeginTransaction();
-
-                return _connection;
-            }
+                var connection = new SqliteConnection(connectionString);
+                connection.Open();
+                _transaction = connection.BeginTransaction();
+                return connection;
+            });
+            _taskRepository = new Lazy<ITaskRepository>(() => new TaskRepository(_connection.Value));
         }
 
-        public ITaskRepository TaskRepository
-        {
-            get
-            {
-                _taskRepository ??= new TaskRepository(Connection);
-                return _taskRepository;
-            }
-        }
+        public ITaskRepository TaskRepository => _taskRepository.Value;
 
         public async Task SaveAsync()
         {
+            if (!_connection.IsValueCreated)
+                return;
+
             try
             {
                 await _transaction.CommitAsync();
@@ -56,7 +44,8 @@ namespace Infrastructure
         public void Dispose()
         {
             _transaction?.Dispose();
-            _connection?.Dispose();
+            if(_connection.IsValueCreated)
+                _connection.Value.Dispose();
         }
     }
 }
