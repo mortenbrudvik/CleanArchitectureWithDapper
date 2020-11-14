@@ -7,18 +7,38 @@ namespace Infrastructure
 {
     internal class UnitOfWork: IUnitOfWork
     {
-        private readonly SqliteConnection _connection;
-        private readonly SqliteTransaction _transaction;
+        private readonly string _connectionString;
+        private SqliteConnection _connection;
+        private SqliteTransaction _transaction;
+        private  ITaskRepository _taskRepository;
 
-        public UnitOfWork(SqliteConnection connection)
+        public UnitOfWork(string connectionString)
         {
-            _connection = connection;
-            _connection.Open();
-            _transaction =_connection.BeginTransaction();
-            TaskRepository = new TaskRepository(_connection);
+            _connectionString = connectionString;
         }
 
-        public ITaskRepository TaskRepository { get; }
+        public SqliteConnection Connection
+        {
+            get
+            {
+                if (_connection != null) return _connection;
+                
+                _connection = new SqliteConnection(_connectionString);
+                _connection.Open();
+                _transaction = _connection.BeginTransaction();
+
+                return _connection;
+            }
+        }
+
+        public ITaskRepository TaskRepository
+        {
+            get
+            {
+                _taskRepository ??= new TaskRepository(Connection);
+                return _taskRepository;
+            }
+        }
 
         public async Task SaveAsync()
         {

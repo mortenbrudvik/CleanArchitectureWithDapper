@@ -23,17 +23,17 @@ namespace PublicApi.Controllers
         [HttpGet]
         public async Task<IEnumerable<TaskItem>> Get()
         {
-            return await _taskRepository.GetAll();
+            return await _taskRepository.GetAllAsync();
         }
 
         [HttpPost]
         public async Task<TaskItem> PostTask([FromServices] IUnitOfWork unitOfWork, TaskItem task)
         {
-            var insertedTask = await unitOfWork.TaskRepository.CreateAsync(task);
+            await unitOfWork.TaskRepository.AddAsync(task);
 
             await unitOfWork.SaveAsync();
 
-            return insertedTask;
+            return task;
         }
     }
 }

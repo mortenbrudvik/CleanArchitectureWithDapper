@@ -12,7 +12,7 @@ namespace Infrastructure
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
             services.AddScoped<ITaskRepository>(_ => new TaskRepository(new SqliteConnection(connectionString)));
-            services.AddScoped<IUnitOfWork>(_ => new UnitOfWork(new SqliteConnection(connectionString)));
+            services.AddScoped<IUnitOfWork>(_ => new UnitOfWork(connectionString));
 
             return services;
         }

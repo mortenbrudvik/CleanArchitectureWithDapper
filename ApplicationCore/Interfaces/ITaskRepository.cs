@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using ApplicationCore.Entities;
+﻿using ApplicationCore.Entities;
 
 namespace ApplicationCore.Interfaces
 {
-    public interface ITaskRepository
+    public interface ITaskRepository : IGenericRepository<TaskItem>
     {
-        Task<TaskItem> CreateAsync(TaskItem taskItem);
-        Task<IEnumerable<TaskItem>> GetAll();
     }
 }
