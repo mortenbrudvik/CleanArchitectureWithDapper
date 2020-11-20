@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
@@ -20,8 +21,7 @@ namespace PublicApi
             {
                 logger.Debug("Start Public API Service");
 
-                _host = CreateHostBuilder(args);
-
+                _host = CreateHost(args);
                 await _host.StartAsync();
             }
             catch (Exception exception)
@@ -33,25 +33,42 @@ namespace PublicApi
 
         public async Task StopAsync()
         {
+            if(_host==null)
+                return;
+            
             using (_host)
             {
-                NLog.LogManager.Shutdown();
                 await _host.StopAsync(TimeSpan.FromSeconds(5));
             }
         }
 
-        private IHost CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args).UseContentRoot(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                })
+        private static IHost CreateHost(string[] args) =>
+            Host.CreateDefaultBuilder(args)
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
                     logging.SetMinimumLevel(LogLevel.Trace);
+                    logging.AddNLog("nlog.config");
                 })
-                .UseNLog()
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    var apiUrl = GetSetting("apiServiceUrl");
+                    var launchBrowser = bool.Parse(GetSetting("launchBrowser"));
+
+                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseUrls(apiUrl);
+                    webBuilder.UseKestrel();
+
+                    if(launchBrowser)
+                        Process.Start(new ProcessStartInfo(apiUrl) { UseShellExecute = true });
+                })
                 .Build();
+
+        private static string GetSetting(string key)=>
+            new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build().GetSection(key).Value;
+
     }
 }
