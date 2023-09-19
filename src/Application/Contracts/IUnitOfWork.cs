@@ -5,5 +5,5 @@ namespace Application.Contracts;
 public interface IUnitOfWork : IDisposable
 {
     IRepository<TaskItem> Tasks { get; }
-    Task SaveAsync(CancellationToken cancellationToken);
+    Task Save(CancellationToken cancellationToken);
 }

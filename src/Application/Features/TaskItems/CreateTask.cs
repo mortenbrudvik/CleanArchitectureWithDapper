@@ -22,8 +22,8 @@ public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, TaskI
             Title = request.Title
         };
 
-        _unitOfWork.Tasks.AddAsync(task);
-        await _unitOfWork.SaveAsync(cancellationToken);
+        await _unitOfWork.Tasks.Add(task);
+        await _unitOfWork.Save(cancellationToken);
 
         return new TaskItemDto
         {

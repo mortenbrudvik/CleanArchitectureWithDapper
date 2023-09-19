@@ -1,16 +1,14 @@
-﻿using System.Data;
-using System.Data.Common;
-using Application.Contracts;
+﻿using Application.Contracts;
 using Domain;
 using Microsoft.Data.Sqlite;
 
 namespace Infrastructure
 {
-    internal class UnitOfWork: IUnitOfWork
+    public class UnitOfWork: IUnitOfWork
     {
         private readonly Lazy<SqliteConnection> _connection;
         private readonly Lazy<IRepository<TaskItem>> _taskRepository;
-        private SqliteTransaction _transaction;
+        private SqliteTransaction _transaction = default!;
 
         public UnitOfWork(SqliteConnection connection)
         {
@@ -25,24 +23,24 @@ namespace Infrastructure
 
         public IRepository<TaskItem> Tasks => _taskRepository.Value;
 
-        public async Task SaveAsync(CancellationToken cancellationToken)
+        public async Task Save(CancellationToken cancellationToken)
         {
             if (!_connection.IsValueCreated)
                 return;
 
             try
             {
-                await _transaction.CommitAsync();
+                await _transaction.CommitAsync(cancellationToken);
             }
             catch (Exception e)
             {
-                await _transaction.RollbackAsync();
+                await _transaction.RollbackAsync(cancellationToken);
                 throw new Exception("Failed to commit changes to database", e);
             }
             finally
             {
                 await _transaction.DisposeAsync();
-                _transaction = (SqliteTransaction)await _connection.Value.BeginTransactionAsync();
+                _transaction = (SqliteTransaction)await _connection.Value.BeginTransactionAsync(cancellationToken);
             }
         }
 

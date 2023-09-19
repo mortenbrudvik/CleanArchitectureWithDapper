@@ -28,11 +28,16 @@ public class TaskItemRepository : IRepository<TaskItem>
         return await _connection.QueryAsync<TaskItem>(sqlResult.Sql, sqlResult.NamedBindings);
     }
 
-    public async Task<TaskItem> AddAsync(TaskItem entity)
+    public async Task<TaskItem> Add(TaskItem entity)
     {
-        entity.Id = Guid.NewGuid();
-        await _connection.InsertAsync(entity);
+        var id = await _connection.InsertAsync(entity);
+        entity.Id = id;
         
         return entity;
+    }
+
+    public async Task<IEnumerable<TaskItem>> GetAll()
+    {
+        return await _connection.GetAllAsync<TaskItem>();
     }
 }
