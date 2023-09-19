@@ -1,6 +1,6 @@
 using SqlKata;
 
-namespace Application;
+namespace Application.Contracts;
 
 public interface ISpecification<T>
 {

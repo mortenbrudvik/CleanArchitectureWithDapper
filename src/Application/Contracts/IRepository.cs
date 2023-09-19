@@ -1,6 +1,8 @@
-namespace Application;
+using SharedKernel;
 
-public interface IRepository<T>
+namespace Application.Contracts;
+
+public interface IRepository<T> where T : IEntity
 {
     IEnumerable<T> Query(ISpecification<T> specification);
 }

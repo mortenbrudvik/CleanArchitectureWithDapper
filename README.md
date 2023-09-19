@@ -1,13 +1,21 @@
 
-## Pending
+# Clean Architecture Template with Dapper
 
--[ ] Investigate InterpolatedSql.Dapper  
-
-https://github.com/Drizin/InterpolatedSql/tree/main/src/InterpolatedSql.Dapper
-
+- SQLLite
+- Dapper, Dapper.Contrib and SqlKata
 
 ---
 
+
+
+## Dependencies
+
+### Abstractions
+
+```shell
+dotnet add package Microsoft.Extensions.DependencyInjection.Abstractions
+dotnet add package Microsoft.Extensions.Configuration.Abstractions
+```
 
 ### SqlKata
 https://sqlkata.com/
@@ -26,5 +34,11 @@ dotnet add package dapper
 dotnet add package dapper.contrib
 ```
 
+### SQLite
+https://learn.microsoft.com/en-us/dotnet/standard/data/sqlite/?tabs=netcore-cli
+
+```shell
+dotnet add package Microsoft.Data.Sqlite
+```
 
 

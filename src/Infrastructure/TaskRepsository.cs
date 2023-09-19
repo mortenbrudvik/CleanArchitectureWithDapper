@@ -1,12 +1,14 @@
 using System.Data;
 using Application;
+using Application.Contracts;
 using Dapper;
+using Domain;
 using SqlKata.Compilers;
 using SqlKata.Execution;
 
 namespace Infrastructure;
 
-public class TaskRepository : IRepository<Task>
+public class TaskRepository : IRepository<TaskItem>
 {
     private readonly IDbConnection _connection;
     private readonly QueryFactory _queryFactory;
@@ -16,12 +18,12 @@ public class TaskRepository : IRepository<Task>
         _connection = connection;
         _queryFactory = new QueryFactory(connection, new SqlServerCompiler());
     }
-    public IEnumerable<Task> Query(ISpecification<Task> specification)
+    public IEnumerable<TaskItem> Query(ISpecification<TaskItem> specification)
     {
-        var query = _queryFactory.Query(nameof(Task) + "s");
+        var query = _queryFactory.Query(nameof(TaskItem) + "s");
         query = specification.Apply(query);
         
         var sqlResult = _queryFactory.Compiler.Compile(query);
-        return _connection.Query<Task>(sqlResult.Sql, sqlResult.NamedBindings);
+        return _connection.Query<TaskItem>(sqlResult.Sql, sqlResult.NamedBindings);
     }
 }
