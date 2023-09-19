@@ -11,5 +11,13 @@ namespace ApplicationCore.Interfaces
         Task AddAsync(T entity);
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
+        
+        Task<T> QueryAsync(ISpecification<T> spec);
+        
+    }
+
+    public interface ISpecification<T>
+    {
+        
     }
 }

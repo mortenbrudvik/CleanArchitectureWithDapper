@@ -1,9 +1,30 @@
-# SQLiteDapperConsole
 
-Features
-* Starting ASP.NET Core API from Console project. 
-* Setting up a SQLite database, and use Dapper (micro orm) for data access.
-* Create task, and fetch all tasks using the the api. ../tasks 
-* Support for swagger at root address.
-* UnitOfWork pattern implemented.
-* Support for NLog provider for improved logging
+## Pending
+
+-[ ] Investigate InterpolatedSql.Dapper  
+
+https://github.com/Drizin/InterpolatedSql/tree/main/src/InterpolatedSql.Dapper
+
+
+---
+
+
+### SqlKata
+https://sqlkata.com/
+
+```shell
+dotnet add package SqlKata
+dotnet add package SqlKata.Execution
+```
+
+### Dapper
+https://github.com/DapperLib/Dapper
+https://github.com/DapperLib/Dapper.Contrib
+
+```shell
+dotnet add package dapper
+dotnet add package dapper.contrib
+```
+
+
+
