@@ -1,4 +1,6 @@
-﻿using Application.Contracts;
+﻿using System.Data;
+using System.Data.Common;
+using Application.Contracts;
 using Domain;
 using Microsoft.Data.Sqlite;
 
@@ -10,21 +12,20 @@ namespace Infrastructure
         private readonly Lazy<IRepository<TaskItem>> _taskRepository;
         private SqliteTransaction _transaction;
 
-        public UnitOfWork(string connectionString)
+        public UnitOfWork(SqliteConnection connection)
         {
             _connection = new Lazy<SqliteConnection>(() =>
             {
-                var connection = new SqliteConnection(connectionString);
                 connection.Open();
                 _transaction = connection.BeginTransaction();
                 return connection;
             });
-            _taskRepository = new Lazy<IRepository<TaskItem>>(() => new TaskRepository(_connection.Value));
+            _taskRepository = new Lazy<IRepository<TaskItem>>(() => new TaskItemRepository(_connection.Value));
         }
 
         public IRepository<TaskItem> Tasks => _taskRepository.Value;
 
-        public async Task SaveAsync()
+        public async Task SaveAsync(CancellationToken cancellationToken)
         {
             if (!_connection.IsValueCreated)
                 return;

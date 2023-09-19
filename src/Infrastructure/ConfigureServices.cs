@@ -1,4 +1,5 @@
-﻿using Application.Contracts;
+﻿using System.Data;
+using Application.Contracts;
 using Domain;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
@@ -12,7 +13,9 @@ public static class ConfigureServices
     {
         var connectionString = configuration.GetConnectionString("SqlLiteConnection");
         
-        services.AddScoped<IRepository<TaskItem>>(_ => new TaskRepository(new SqliteConnection(connectionString)));
+        services.AddScoped<SqliteConnection>(_ => new SqliteConnection(connectionString));
+        services.AddScoped<IDbConnection>(provider => provider.GetRequiredService<SqliteConnection>());
+        services.AddScoped<IRepository<TaskItem>, TaskItemRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         
         return services;

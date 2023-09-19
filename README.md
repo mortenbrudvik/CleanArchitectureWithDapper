@@ -1,8 +1,8 @@
 
 # Clean Architecture Template with Dapper
 
-- SQLLite
-- Dapper, Dapper.Contrib and SqlKata
+
+- Dapper, Dapper.Contrib, SqlKata and SQLLite
 
 ---
 
@@ -15,6 +15,12 @@
 ```shell
 dotnet add package Microsoft.Extensions.DependencyInjection.Abstractions
 dotnet add package Microsoft.Extensions.Configuration.Abstractions
+```
+
+### MediatR
+https://github.com/jbogard/MediatR
+```shell
+dotnet add package MediatR
 ```
 
 ### SqlKata
