@@ -1,3 +1,4 @@
+using System.Data;
 using Dapper;
 using Microsoft.Data.Sqlite;
 
@@ -15,6 +16,9 @@ public class SqliteDatabase : IDisposable
 
     public virtual void Initialize()
     {
+        Insert("DROP TABLE IF EXISTS Cars");
+        
+        Insert("DROP TABLE IF EXISTS TaskItems");
         Insert(    
             """
                CREATE TABLE TaskItems (
@@ -23,10 +27,50 @@ public class SqliteDatabase : IDisposable
                    Done INTEGER NOT NULL DEFAULT 0
                )
            """);
+        
+        Insert(    
+            """
+                CREATE TABLE Cars (
+                    Id UNIQUEIDENTIFIER PRIMARY KEY,
+                    Name TEXT NOT NULL,
+                    Year INTEGER NOT NULL
+                )
+            """);
+        SqlMapper.AddTypeHandler(typeof(Guid), new GuidTypeHandler());
+
+        var car = new Car
+        {
+            Id = Guid.NewGuid(),
+            Name = "Ford",
+            Year = 2021
+        };  
+        
+        var id = _connection.Execute("INSERT INTO Cars (Id, Name, Year) VALUES (@Id, @Name, @Year)", car);
+
+        var cars = _connection.Query<Car>("SELECT * FROM Cars");
+
+        
     }
 
     public void Insert(string sql) => _connection.Execute(sql);
+    public void Insert<T>(string sql, T entity ) => _connection.Execute(sql, entity);
+    public IEnumerable<T> Get<T>(string sql ) => _connection.Query<T>(sql);
 
 
     public void Dispose() => _connection.Dispose();
+}
+
+
+public class GuidTypeHandler : SqlMapper.ITypeHandler
+{
+    public void SetValue(IDbDataParameter parameter, object value)
+    {
+        parameter.Value = value.ToString();
+    }
+
+    public object Parse(Type destinationType, object value)
+    {
+        return value is Guid  ? value : Guid.Parse(value.ToString()!);
+    }
+
 }

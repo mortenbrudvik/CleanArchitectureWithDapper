@@ -12,23 +12,21 @@ public class UnitOfWorkFixture : XunitContextBase
 
     public UnitOfWorkFixture(ITestOutputHelper output) : base(output)
     {
-        const string connectionString = "Data Source=TestMemoryDb;Mode=Memory;Cache=Shared";
+        const string connectionString = "Data Source=:memory:;Mode=Memory;Cache=Shared";
         
         _database = new SqliteDatabase(connectionString);
         _database.Initialize();
         _unitOfWork = new UnitOfWork(new SqliteConnection(connectionString));
     }
 
-    public void Insert(string sql)
-    {
-        _database.Insert(sql);
-    }
+    public void Insert(string sql) => _database.Insert(sql);
+    public void Insert<T>(string sql, T entity) => _database.Insert(sql, entity);
+    public IEnumerable<T> GetAll<T>(string sql) => _database.Get<T>(sql);
     public IUnitOfWork UnitOfWork => _unitOfWork;
 
     public override void Dispose()
     {
         _unitOfWork.Dispose();
-        _database.Dispose();
         
         base.Dispose();
     }

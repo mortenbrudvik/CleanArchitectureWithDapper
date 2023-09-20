@@ -1,5 +1,5 @@
 using Application.Features.TaskItems;
-using Microsoft.Data.Sqlite;
+using Dapper.Contrib.Extensions;
 using Shouldly;
 using Xunit.Abstractions;
 
@@ -52,6 +52,7 @@ public class CreateTaskTests : UnitOfWorkFixture
 
 public class Car
 {
+    [ExplicitKey]
     public Guid Id { get; set; }
     public string Name { get; set; } = "";
     public int Year { get; set; }
