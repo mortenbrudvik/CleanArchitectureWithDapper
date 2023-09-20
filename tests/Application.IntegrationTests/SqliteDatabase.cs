@@ -13,22 +13,20 @@ public class SqliteDatabase : IDisposable
         _connection.Open();
     }
 
-    public void CreateDatabase()
+    public virtual void Initialize()
     {
-        _connection.Execute(
+        Insert(    
             """
-            CREATE TABLE TaskItems (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                Title TEXT NOT NULL DEFAULT '',
-                Done INTEGER NOT NULL DEFAULT 0
-            )
-            """
-        );
+               CREATE TABLE TaskItems (
+                   Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                   Title TEXT NOT NULL DEFAULT '',
+                   Done INTEGER NOT NULL DEFAULT 0
+               )
+           """);
     }
 
+    public void Insert(string sql) => _connection.Execute(sql);
 
-    public void Dispose()
-    {
-        _connection.Dispose();
-    }
+
+    public void Dispose() => _connection.Dispose();
 }
