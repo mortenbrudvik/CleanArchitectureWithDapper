@@ -4,6 +4,9 @@
 
 - Dapper, Dapper.Contrib, SqlKata and SQLLite
 
+### Pending
+- AutoFac, Fluent migrator, SeriLog
+
 ---
 
 
@@ -47,4 +50,20 @@ https://learn.microsoft.com/en-us/dotnet/standard/data/sqlite/?tabs=netcore-cli
 dotnet add package Microsoft.Data.Sqlite
 ```
 
+### Fluent Migrator
+
+https://github.com/fluentmigrator/fluentmigrator
+
+https://fluentmigrator.github.io/index.html
+
+```shell
+# For migration development
+dotnet add package FluentMigrator
+
+# For migration execution
+dotnet add package FluentMigrator.Runner
+
+# For database support
+dotnet add package FluentMigrator.Runner.SQLite
+```
 
