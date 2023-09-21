@@ -67,3 +67,13 @@ dotnet add package FluentMigrator.Runner
 dotnet add package FluentMigrator.Runner.SQLite
 ```
 
+### AutoFac
+
+https://autofac.readthedocs.io/en/latest/index.html
+
+https://autofac.readthedocs.io/en/latest/integration/aspnetcore.html
+
+
+```shell
+dotnet add package Autofac
+```
