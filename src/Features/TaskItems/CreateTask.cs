@@ -6,7 +6,7 @@ namespace Features.TaskItems;
 
 public class CreateTaskCommand : IRequest<TaskItemDto>
 {
-    public string Title { get; set; } = "";
+    public required string Title { get; set; } 
 }
 
 public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, TaskItemDto>
@@ -22,7 +22,10 @@ public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, TaskI
             Title = request.Title
         };
 
-        await _unitOfWork.Tasks.Add(task);
+        await _unitOfWork.Tasks.Add(new TaskItem
+        {
+            Title = request.Title
+        });
         await _unitOfWork.Save(cancellationToken);
 
         return new TaskItemDto
