@@ -30,8 +30,7 @@ public class TaskItemRepository : IRepository<TaskItem>
 
     public async Task<TaskItem> Add(TaskItem entity)
     {
-        var id = await _connection.InsertAsync(entity);
-        entity.Id = id;
+        await _connection.InsertAsync(entity);
         
         return entity;
     }

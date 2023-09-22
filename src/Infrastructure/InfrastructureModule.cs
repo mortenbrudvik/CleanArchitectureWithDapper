@@ -1,7 +1,9 @@
 ﻿using System.Data;
 using Application.Contracts;
 using Autofac;
+using Dapper;
 using Domain;
+using Infrastructure.Dapper;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 
@@ -18,7 +20,10 @@ public class InfrastructureModule : Module
     
     protected override void Load(ContainerBuilder builder)
     {
+        // Repositories and Unit of Work
         var connectionString = _configuration.GetConnectionString("SqlLiteConnection");
+        
+        SqlMapper.AddTypeHandler(typeof(Guid), new GuidTypeHandler());
 
         builder.Register(_ => new SqliteConnection(connectionString))
             .As<SqliteConnection>()
@@ -35,5 +40,8 @@ public class InfrastructureModule : Module
         builder.RegisterType<UnitOfWork>()
             .As<IUnitOfWork>()
             .InstancePerLifetimeScope();
+        
+        // Migrations
+        MigrationRunner.Run(connectionString!);
     }
 }

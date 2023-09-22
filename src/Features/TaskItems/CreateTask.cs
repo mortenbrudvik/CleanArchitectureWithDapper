@@ -24,6 +24,7 @@ public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, TaskI
 
         await _unitOfWork.Tasks.Add(new TaskItem
         {
+            Id = Guid.NewGuid(),
             Title = request.Title
         });
         await _unitOfWork.Save(cancellationToken);
