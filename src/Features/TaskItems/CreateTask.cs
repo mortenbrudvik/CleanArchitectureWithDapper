@@ -2,7 +2,7 @@
 using Domain;
 using MediatR;
 
-namespace Application.Features.TaskItems;
+namespace Features.TaskItems;
 
 public class CreateTaskCommand : IRequest<TaskItemDto>
 {

@@ -1,4 +1,4 @@
-namespace Application.Features.TaskItems;
+namespace Features.TaskItems;
 
 public class TaskItemDto
 {

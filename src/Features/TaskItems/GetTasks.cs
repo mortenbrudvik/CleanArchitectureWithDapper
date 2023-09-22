@@ -1,7 +1,7 @@
 using Application.Contracts;
 using MediatR;
 
-namespace Application.Features.TaskItems;
+namespace Features.TaskItems;
 
 public class GetTasksCommand : IRequest<TaskItemDto[]>
 {

@@ -1,7 +1,5 @@
-using Application.Features.TaskItems;
 using Dapper.Contrib.Extensions;
-using Shouldly;
-using Xunit.Abstractions;
+using Features.TaskItems;
 
 namespace Application.IntegrationTests;
 

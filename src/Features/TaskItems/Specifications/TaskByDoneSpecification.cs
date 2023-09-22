@@ -1,7 +1,7 @@
 using Application.Contracts;
 using SqlKata;
 
-namespace Application.Features.TaskItems.Specifications;
+namespace Features.TaskItems.Specifications;
 
 public class TaskByStatusSpecification : ISpecification<Task>
 {
