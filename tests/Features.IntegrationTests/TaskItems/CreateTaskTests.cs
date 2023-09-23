@@ -3,7 +3,7 @@ using Features.TaskItems;
 
 namespace Features.IntegrationTests.TaskItems;
 
-public class CreateTaskTests : UnitOfWorkFixture
+public class CreateTaskTests : TestBase
 { 
     [Fact]
     public async Task ShouldRequireMinimumFields()
@@ -19,29 +19,6 @@ public class CreateTaskTests : UnitOfWorkFixture
         task.Title.ShouldBe(createCommand.Title);
     }
     
-    [Fact]
-    public async Task TestDapper()
-    {
-        
-        Insert(    
-            """
-                CREATE TABLE Cars (
-                    Id TEXT PRIMARY KEY,
-                    Name TEXT NOT NULL,
-                    Year INTEGER NOT NULL
-                )
-            """);
-        
-        var car = new Car
-        {
-            Id = Guid.NewGuid(),
-            Name = "Ford",
-            Year = 2021
-        };  
-        
-        const string sql = "INSERT INTO Cars (Id, Name, Year) VALUES (@Id, @Name, @Year)";
-        Insert(sql);
-    }
 
     public CreateTaskTests(ITestOutputHelper output) : base(output)
     {

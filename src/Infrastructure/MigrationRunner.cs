@@ -16,7 +16,6 @@ public static class MigrationRunner
                 .AddSQLite()
                 .WithGlobalConnectionString(connectionString)
                 .ScanIn(typeof(AddTaskTable).Assembly).For.Migrations())
-            //.AddLogging(lb => lb.AddFluentMigratorConsole())
             .BuildServiceProvider(false);
         
         var runner = serviceProvider.GetRequiredService<IMigrationRunner>();

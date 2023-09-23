@@ -46,7 +46,7 @@ namespace Infrastructure
 
         public void Dispose()
         {
-            _transaction?.Dispose();
+            _transaction.Dispose();
             if(_connection.IsValueCreated)
                 _connection.Value.Dispose();
         }
