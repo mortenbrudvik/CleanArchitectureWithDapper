@@ -1,8 +1,9 @@
 using Dapper;
+using Features.IntegrationTests.TaskItems;
 using Infrastructure.Dapper;
 using Microsoft.Data.Sqlite;
 
-namespace Application.IntegrationTests;
+namespace Features.IntegrationTests;
 
 public class SqliteDatabase : IDisposable
 {

@@ -6,6 +6,8 @@
     <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
+
+    <RootNamespace>Features.IntegrationTests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,5 +33,6 @@
     <ProjectReference Include="..\..\src\Features\Features.csproj" />
     <ProjectReference Include="..\..\src\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
+
 
 </Project>

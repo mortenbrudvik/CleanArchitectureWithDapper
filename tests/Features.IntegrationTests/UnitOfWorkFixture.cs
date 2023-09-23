@@ -1,9 +1,8 @@
 using Application.Contracts;
 using Infrastructure;
 using Microsoft.Data.Sqlite;
-using Xunit.Abstractions;
 
-namespace Application.IntegrationTests;
+namespace Features.IntegrationTests;
 
 public class UnitOfWorkFixture : XunitContextBase
 {

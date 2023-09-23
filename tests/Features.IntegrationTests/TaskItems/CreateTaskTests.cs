@@ -1,7 +1,7 @@
 using Dapper.Contrib.Extensions;
 using Features.TaskItems;
 
-namespace Application.IntegrationTests;
+namespace Features.IntegrationTests.TaskItems;
 
 public class CreateTaskTests : UnitOfWorkFixture
 { 
