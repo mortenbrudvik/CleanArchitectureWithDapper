@@ -11,12 +11,14 @@ public class CreateTaskTests : TestBase
         var createCommand = new CreateTaskCommand {Title = "Make breakfast"};
         var createHandler = new CreateTaskCommandHandler(UnitOfWork);
         
-        var task = await createHandler.Handle(createCommand, new CancellationToken());
-        
+        await createHandler.Handle(createCommand, new CancellationToken());
+        await UnitOfWork.Save(CancellationToken.None);
+
         var tasks = await UnitOfWork.Tasks.GetAll();
 
-        task.ShouldNotBeNull();
-        task.Title.ShouldBe(createCommand.Title);
+        tasks.ShouldNotBeNull();
+        tasks.Count.ShouldBe(1);
+        tasks.First().Title.ShouldBe("Make breakfast");
     }
     
 

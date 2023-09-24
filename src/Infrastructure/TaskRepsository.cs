@@ -19,13 +19,14 @@ public class TaskItemRepository : IRepository<TaskItem>
         _queryFactory = new QueryFactory(connection, new SqlServerCompiler());
     }
     
-    public async Task<IEnumerable<TaskItem>> Query(ISpecification<TaskItem> specification)
+    public async Task<ICollection<TaskItem>> Query(ISpecification<TaskItem> specification)
     {
         var query = _queryFactory.Query(nameof(TaskItem) + "s");
         query = specification.Apply(query);
         
         var sqlResult = _queryFactory.Compiler.Compile(query);
-        return await _connection.QueryAsync<TaskItem>(sqlResult.Sql, sqlResult.NamedBindings);
+        var tasks =  await _connection.QueryAsync<TaskItem>(sqlResult.Sql, sqlResult.NamedBindings);
+        return tasks.ToList();
     }
 
     public async Task<TaskItem> Add(TaskItem entity)
@@ -35,8 +36,9 @@ public class TaskItemRepository : IRepository<TaskItem>
         return entity;
     }
 
-    public async Task<IEnumerable<TaskItem>> GetAll()
+    public async Task<ICollection<TaskItem>> GetAll()
     {
-        return await _connection.GetAllAsync<TaskItem>();
+        var tasks = await _connection.GetAllAsync<TaskItem>();
+        return tasks.ToList();
     }
 }
