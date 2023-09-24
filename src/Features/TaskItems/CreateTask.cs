@@ -19,14 +19,11 @@ public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, TaskI
     {
         var task = new TaskItem
         {
-            Title = request.Title
+            Title = request.Title,
+            Id = Guid.NewGuid()
         };
 
-        await _unitOfWork.Tasks.Add(new TaskItem
-        {
-            Id = Guid.NewGuid(),
-            Title = request.Title
-        });
+        await _unitOfWork.Tasks.Add(task);
         await _unitOfWork.Save(cancellationToken);
 
         return new TaskItemDto
