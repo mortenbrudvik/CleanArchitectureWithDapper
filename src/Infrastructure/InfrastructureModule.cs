@@ -42,6 +42,6 @@ public class InfrastructureModule : Module
             .InstancePerLifetimeScope();
         
         // Migrations
-        MigrationRunner.Run(connectionString!);
+        MigrationExt.MigrateUp(connectionString!);
     }
 }

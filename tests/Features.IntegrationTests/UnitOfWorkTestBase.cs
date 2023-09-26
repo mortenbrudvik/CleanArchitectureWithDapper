@@ -6,17 +6,17 @@ using Microsoft.Data.Sqlite;
 
 namespace Features.IntegrationTests;
 
-public class TestBase : XunitContextBase
+public class UnitOfWorkTestBase : XunitContextBase
 {
     private readonly UnitOfWork _unitOfWork;
     private readonly string _connectionString;
 
-    public TestBase(ITestOutputHelper output) : base(output)
+    public UnitOfWorkTestBase(ITestOutputHelper output) : base(output)
     {
         File.Delete("TestPlanner.sqlite");
 
         _connectionString = "Data Source=TestPlanner.sqlite";
-        MigrationRunner.Run(_connectionString); // make sure database is up to date
+        MigrationExt.MigrateUp(_connectionString); // make sure database is up to date
         
         SqlMapper.AddTypeHandler(typeof(Guid), new GuidTypeHandler());
         

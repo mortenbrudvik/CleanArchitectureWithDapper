@@ -46,9 +46,10 @@ namespace Infrastructure
 
         public void Dispose()
         {
+            if (!_connection.IsValueCreated) return;
+            
             _transaction.Dispose();
-            if(_connection.IsValueCreated)
-                _connection.Value.Dispose();
+            _connection.Value.Dispose();
         }
     }
 }

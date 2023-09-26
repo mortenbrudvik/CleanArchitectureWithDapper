@@ -15,11 +15,10 @@ public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, TaskI
 
     public CreateTaskCommandHandler(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
-    public async Task<TaskItemDto> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
+    public async Task<TaskItemDto> Handle(CreateTaskCommand command, CancellationToken cancellationToken)
     {
-        var task = new TaskItem
+        var task = new TaskItem(command.Title)
         {
-            Title = request.Title,
             Id = Guid.NewGuid()
         };
 

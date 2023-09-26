@@ -3,34 +3,35 @@ using Features.TaskItems;
 
 namespace Features.IntegrationTests.TaskItems;
 
-public class CreateTaskTests : TestBase
+public class CreateTaskTests : UnitOfWorkTestBase
 { 
     [Fact]
-    public async Task ShouldRequireMinimumFields()
+    public async Task ShouldReturnAValidTask()
     {
         var createCommand = new CreateTaskCommand {Title = "Make breakfast"};
-        var createHandler = new CreateTaskCommandHandler(UnitOfWork);
+        var sut = new CreateTaskCommandHandler(UnitOfWork);
         
-        await createHandler.Handle(createCommand, new CancellationToken());
+        var task = await sut.Handle(createCommand, new CancellationToken());
         await UnitOfWork.Save(CancellationToken.None);
 
-        var tasks = await UnitOfWork.Tasks.GetAll();
-
-        tasks.ShouldNotBeNull();
-        tasks.Count.ShouldBe(1);
-        tasks.First().Title.ShouldBe("Make breakfast");
+        task.ShouldNotBeNull();
+        task.Title.ShouldBe("Make breakfast");
+        task.Id.ShouldNotBe(Guid.Empty);
+        task.Done.ShouldBeFalse();
+    }
+    
+    [Fact]
+    public async Task ShouldThrowExceptionWhenTitleIsEmpty()
+    {
+        var createCommand = new CreateTaskCommand {Title = ""};
+        var sut = new CreateTaskCommandHandler(UnitOfWork);
+        
+        await Should.ThrowAsync<ArgumentException>(async () => 
+            await sut.Handle(createCommand, new CancellationToken()));
     }
     
 
     public CreateTaskTests(ITestOutputHelper output) : base(output)
     {
     }
-}
-
-public class Car
-{
-    [ExplicitKey]
-    public Guid Id { get; set; }
-    public string Name { get; set; } = "";
-    public int Year { get; set; }
 }
