@@ -41,4 +41,10 @@ public class TaskItemRepository : IRepository<TaskItem>
         var tasks = await _connection.GetAllAsync<TaskItem>();
         return tasks.ToList();
     }
+
+    public async Task<TaskItem?> GetById(Guid id)
+    {
+        var task = await _connection.GetAsync<TaskItem>(id);
+        return task;
+    }
 }
