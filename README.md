@@ -2,16 +2,32 @@
 # Clean Architecture Template with Dapper
 
 
-- Dapper, Dapper.Contrib, SqlKata and SQLLite
+DI: AutoFac
+Persistence: Dapper, Dapper.Contrib, SqlKata and SQLLite, FluentMigrator
 
 ### Pending
-- AutoFac, Fluent migrator, SeriLog
+- [ ] SeriLog
+
+
+### Issues
+
+TaskManager.UI
+- [ ] Fail to build React project
+- [ ] Setting PORT in .env file does not work
+
+
+## React Client
+
+
+Visual Studio React Project
+[Tutorial: Create a Node.js and React app in Visual Studio](https://learn.microsoft.com/en-us/visualstudio/javascript/tutorial-nodejs-with-react-and-jsx?view=vs-2022)
+
 
 ---
 
 
 
-## Dependencies
+## Tech dependencies
 
 ### Abstractions
 
