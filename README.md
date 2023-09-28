@@ -12,7 +12,7 @@ Persistence: Dapper, Dapper.Contrib, SqlKata and SQLLite, FluentMigrator
 ### Issues
 
 TaskManager.UI
-- [ ] Fail to build React project
+- [x] Fail to build React project
 - [ ] Setting PORT in .env file does not work
 
 
